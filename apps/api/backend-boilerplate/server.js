@@ -1,19 +1,19 @@
 import Fastify from "fastify";
+import "dotenv/config";
+
+import jwtPlugin from "./plugins/jwt.js";
+import { authRoutes } from "./modules/auth/auth.routes.js";
 
 const fastify = Fastify({
   logger: true,
 });
 
-// Declare a route
-fastify.get("/", function (request, reply) {
-  reply.send({ hello: "world" });
+// 1. plugins primero
+await fastify.register(jwtPlugin);
+
+// 2. routes después
+await fastify.register(authRoutes, {
+  prefix: "/auth",
 });
 
-// Run the server!
-fastify.listen({ port: 3000 }, function (err, address) {
-  if (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-  // Server is now listening on ${address}
-});
+await fastify.listen({ port: 3000 });
