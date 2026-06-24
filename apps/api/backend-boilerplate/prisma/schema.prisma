@@ -80,7 +80,7 @@ model Inventory {
   updatedAt   DateTime @updatedAt
 }
 
-model Sales {
+model Sale {
   id              String         @id @default(uuid())
   amount Decimal @db.Decimal(10, 2)
   createdAt       DateTime       @default(now())
@@ -88,15 +88,39 @@ model Sales {
 
   // Relación con el método de pago
   paymentMethodId String
-  paymentMethod   PaymentMethods @relation(fields: [paymentMethodId], references: [id])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 }
 
-model PaymentMethods {
+model PaymentMethod {
   id        String   @id @default(uuid())
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Apunta exactamente al modelo "Sales" en plural
-  sales     Sales[]
+  sales     Sale[]
+  expenses  Expense[]
+}
+
+model Expense {
+  id              String            @id @default(uuid())
+  name            String
+  amount          Decimal
+
+  paymentMethodId String
+  paymentMethod   PaymentMethod     @relation(fields: [paymentMethodId], references: [id])
+
+  categoryId      String
+  category        ExpenseCategory   @relation(fields: [categoryId], references: [id])
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model ExpenseCategory {
+  id        String    @id @default(uuid())
+  name      String
+  expense  Expense[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
