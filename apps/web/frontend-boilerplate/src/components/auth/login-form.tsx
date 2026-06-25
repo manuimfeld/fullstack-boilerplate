@@ -15,7 +15,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export function LoginForm({
   className,
@@ -39,7 +39,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleLogin}>
             <FieldGroup>
               <Field>
                 <FieldLabel
@@ -57,9 +57,7 @@ export function LoginForm({
                 <Input id="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit" onSubmit={(e) => handleLogin(e)}>
-                  Iniciar sesión
-                </Button>
+                <Button type="submit">Iniciar sesión</Button>
               </Field>
             </FieldGroup>
           </form>
